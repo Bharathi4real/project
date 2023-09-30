@@ -10,10 +10,10 @@ import (
 
 type Configuration struct {
 	DBUsername string `json:"db_username"`
-	DBPassword string `json:"db_password"`
+	DBPassword int    `json:"db_password"`
 	DBName     string `json:"db_name"`
 	DBHost     string `json:"db_host"`
-	DBPort     string `json:"db_port"`
+	DBPort     int    `json:"db_port"`
 	ServerPort string `json:"server_port"`
 }
 

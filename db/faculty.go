@@ -3,12 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
-
 	"log"
-
 	"project.com/attendance/models"
-
-	"project.com/attendance/config"
 
 	_ "github.com/lib/pq"
 )
@@ -16,15 +12,29 @@ import (
 var db *sql.DB
 
 func init() {
-	dataSourceName := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable",
-		config.Config.DBUsername, config.Config.DBPassword, config.Config.DBName, config.Config.DBHost, config.Config.DBPort)
+	dataSourceName := fmt.Sprintf("user=kmax password=2205 dbname=test host=localhost port=5432 sslmode=disable")
 
 	var err error
-	db, err = sql.Open("postgres", dataSourceName)
+
+	db, err = sql.Open(`postgres`, dataSourceName)
 	if err != nil {
-		panic(err)
+		log.Fatalf("Error connecting to the database: %v", err)
 	}
 
+	createFacultyTable()
+}
+
+func createFacultyTable() {
+	_, err := db.Exec(`
+		CREATE TABLE IF NOT EXISTS faculty (
+			id SERIAL PRIMARY KEY,
+			username TEXT NOT NULL,
+			password TEXT NOT NULL
+		)
+	`)
+	if err != nil {
+		log.Fatalf("Error creating faculty table: %v", err)
+	}
 }
 
 func GetFacultyByUsernameAndPassword(username, password string) (*models.Faculty, error) {

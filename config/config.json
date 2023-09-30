@@ -1,8 +1,8 @@
 {
-    "db_username": "dev",
-    "db_password": "2205",
-    "db_name": "dev",
+    "db_username": "kmax",
+    "db_password":2205,
+    "db_name": "test",
     "db_host": "localhost",
-    "db_port": "5432",
+    "db_port":5432,
     "server_port": "8083"
   }

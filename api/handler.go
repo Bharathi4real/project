@@ -36,13 +36,13 @@ func FacultyLoginHandler(c *gin.Context) {
 func AddFacultyHandler(c *gin.Context) {
 	var faculty models.Faculty
 	if err := c.ShouldBindJSON(&faculty); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
 	}
 
 	exists, err := db.UsernameExists(faculty.Username)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error checking username"})
 		return
 	}
 
@@ -53,7 +53,7 @@ func AddFacultyHandler(c *gin.Context) {
 
 	lastInsertID, err := db.AddFaculty(&faculty)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error adding faculty"})
 		return
 	}
 
