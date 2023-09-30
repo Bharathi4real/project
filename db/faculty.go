@@ -1,0 +1,56 @@
+package db
+
+import (
+	"database/sql"
+	"fmt"
+
+	"log"
+
+	"project.com/attendance/models"
+
+	"project.com/attendance/config"
+
+	_ "github.com/lib/pq"
+)
+
+var db *sql.DB
+
+func init() {
+	dataSourceName := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable",
+		config.Config.DBUsername, config.Config.DBPassword, config.Config.DBName, config.Config.DBHost, config.Config.DBPort)
+
+	var err error
+	db, err = sql.Open("postgres", dataSourceName)
+	if err != nil {
+		panic(err)
+	}
+
+}
+
+func GetFacultyByUsernameAndPassword(username, password string) (*models.Faculty, error) {
+	var faculty models.Faculty
+	err := db.QueryRow("SELECT id, username, password FROM faculty WHERE username = $1 AND password = $2", username, password).Scan(&faculty.ID, &faculty.Username, &faculty.Password)
+	if err != nil {
+		return nil, err
+	}
+	return &faculty, nil
+}
+
+func UsernameExists(username string) (bool, error) {
+	var count int
+	err := db.QueryRow("SELECT COUNT(*) FROM faculty WHERE username = $1", username).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
+
+func AddFaculty(faculty *models.Faculty) (int, error) {
+	var lastInsertID int
+	err := db.QueryRow("INSERT INTO faculty (username, password) VALUES ($1, $2) RETURNING id", faculty.Username, faculty.Password).Scan(&lastInsertID)
+	if err != nil {
+		log.Printf("Error inserting faculty: %v", err)
+		return 0, err
+	}
+	return lastInsertID, nil
+}
