@@ -1,14 +1,9 @@
 {
-    "functions": {
-      "api/admin/login": {
-        "handler": "api/admin_login.Handler"
-      },
-      "api/faculty/login": {
-        "handler": "api/faculty_login.Handler"
-      },
-      "api/admin/add_faculty": {
-        "handler": "api/add_faculty.Handler"
-      }
-    }
+    "version": 2,
+    "routes": [
+      { "src": "/api/admin/login", "dest": "api/admin_login" },
+      { "src": "/api/faculty/login", "dest": "api/faculty_login" },
+      { "src": "/api/admin/add_faculty", "dest": "api/add_faculty" }
+    ]
   }
   
